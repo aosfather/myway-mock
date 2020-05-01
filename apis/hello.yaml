@@ -1,0 +1,20 @@
+url: /hello
+desc: hello world
+methods:
+  - GET
+  - POST
+paramters:
+  style: json
+  error: |
+    {"success":false,"errcode":"50001","errmessage":"参数错误!"}
+  items:
+    - {paramter: name ,type: String ,length: 30,policy: Must,regexp: }
+    - {paramter: world ,type: String ,length: 30,policy: Option,regexp: }
+default: success
+matchs:
+  - data: success
+    match:
+      - {paramter: name ,value: mike }
+  - data: error
+    match:
+      - {paramter: name ,value: jone}

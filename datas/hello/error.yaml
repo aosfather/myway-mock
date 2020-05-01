@@ -1,0 +1,5 @@
+code: success
+desc: 错误的返回结果
+style: json
+data: |
+  {"success":false,"errcode":"10001","errmessage":"入口被关闭"}

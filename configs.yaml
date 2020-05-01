@@ -1,0 +1,8 @@
+# 服务端口
+port: 8080
+# 版本号
+version: 1.0.0
+# 预定义的类型
+types:
+  - {name: String}
+  - {}

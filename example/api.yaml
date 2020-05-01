@@ -1,0 +1,30 @@
+# api 地址
+url: /hello
+# api 功能描述
+desc: hello world
+# api 支持的访问形式取值(GET、POST、PUT、DEL)
+methods:
+  - GET
+  - POST
+# 参数定义
+paramters:
+  # 参数形式 取值 json、xml、url-form
+  style: json
+  # 参数校验错误的返回结果
+  error: |
+    {"success":false,"errcode":"50001","errmessage":"参数错误!"}
+  # 参数定义列表，paramter 参数名称 type 参数类型 length 长度限制 policy 策略[取值 Must必填、Option可选 ] regexp 正则校验规则
+  items:
+    - {paramter: name ,type: String ,length: 30,policy: Must,regexp: }
+    - {paramter: world ,type: String ,length: 30,policy: Option,regexp: }
+#默认返回结果编号
+default: success
+# 根据条件的匹配定义，data 返回的数据编号， match 匹配规则 paramter 参数名，value 取值
+# 一个匹配规则可以多个参数只有条件都满足才算匹配上。
+matchs:
+  - data: success
+    match:
+      - {paramter: name ,value: mike }
+  - data: error
+    match:
+      - {paramter: name ,value: jone}

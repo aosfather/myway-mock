@@ -1,0 +1,9 @@
+# api中数据唯一的ID
+code: success
+# 简短的描述
+desc: 成功的返回结果
+# 返回的数据格式，可取值 json、text、html、xml
+style: json
+# 数据体。其中可以使用模板变量。例如有参数名为 requestId，则可以使用 {{.requestId}} 这样引用
+data: |
+  {"request":"{{.requestId}}","success":true,"errcode":"0000","errmessage":"成功"}

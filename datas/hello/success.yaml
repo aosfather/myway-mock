@@ -1,0 +1,5 @@
+code: success
+desc: 成功的返回结果
+style: json
+data: |
+  {"success":true,"errcode":"0000","errmessage":"成功"}
