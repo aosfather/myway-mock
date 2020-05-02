@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"math/rand"
+	"time"
 )
 
 /*
@@ -13,6 +15,9 @@ const (
 	ERR_PARAMETER = "_Parameter"
 	ERR_MSG       = "_Msg"
 )
+
+//随机种子
+var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 type Service struct {
 	meta        *Api
@@ -40,13 +45,13 @@ func (this *Service) IsSupportMethod(m HttpMethodType) bool {
 //校验输入
 func (this *Service) ValidateInput(writer io.Writer, input map[string]interface{}) (StyleType, error) {
 	for _, p := range this.meta.RequestSet.Fields {
-		if !this.validateField(&p, input[p.Name]) {
+		if !this.validateField(p, input[p.Name]) {
 			fmt.Println("not validate", p.Name)
 			errMap := make(map[string]string)
 			errMap[ERR_PARAMETER] = p.Name
 			errMap[ERR_MSG] = fmt.Sprintf("%s 校验不通过", p.Name)
 			this.outError(writer, errMap)
-			return this.meta.RequestSet.Style, fmt.Errorf("%s")
+			return this.meta.RequestSet.Style, fmt.Errorf("%s", errMap[ERR_MSG])
 		}
 	}
 
@@ -64,7 +69,7 @@ func (this *Service) outError(writer io.Writer, err map[string]string) StyleType
 }
 
 //校验字段
-func (this *Service) validateField(p *Paramter, v interface{}) bool {
+func (this *Service) validateField(p Paramter, v interface{}) bool {
 	//参数无值的情况
 	if v == nil {
 		if p.Policy == Must {
@@ -79,6 +84,13 @@ func (this *Service) validateField(p *Paramter, v interface{}) bool {
 
 //根据参数选择对应的数据结果集
 func (this *Service) Select(writer io.Writer, input map[string]interface{}) StyleType {
+	//根据设置的延时时间，随机选取设置的多个值中的一个进行延时处理
+	if this.meta.Delay != nil && len(this.meta.Delay) > 0 {
+		index := r.Intn(len(this.meta.Delay))
+		fmt.Println(index, "---", this.meta.Delay[index])
+		time.Sleep(time.Millisecond * time.Duration(this.meta.Delay[index]))
+	}
+
 	result := this.meta.ResponseSet.Default
 	//根据触发器的条件进行匹配找的完全匹配的结果id
 

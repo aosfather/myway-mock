@@ -8,3 +8,10 @@ version: 1.0.0
 types:
   - {name: String,label: 字符串,length: ,option: ,validator: }
   - {name: Date,label: 日期 ,length: 8,option: "[1-9]\\d*" ,validator: regex}
+  - {name: Dict,label: 字典类型,length: ,option: ,validator: regex }
+# 预定义的字典类型
+dict:
+  - code: sex
+    values:
+      - {key: 1,label: 男}
+      - {key: 2,label: 女}

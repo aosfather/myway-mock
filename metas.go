@@ -15,7 +15,7 @@ import (
 */
 //校验器类型列表
 var validators map[string]*ValidatorType = make(map[string]*ValidatorType)
-var types map[string]*Type = make(map[string]*Type)
+var types map[string]Type = make(map[string]Type)
 
 //注册校验器
 func init() {
@@ -195,8 +195,9 @@ type Paramter struct {
 }
 
 func (this *Paramter) Validate(v string) bool {
+	fmt.Println(this.TypeName)
 	t := types[this.TypeName]
-	if t == nil {
+	if t.Name == "" {
 		return false
 	}
 
@@ -222,7 +223,7 @@ func (this *Paramter) Validate(v string) bool {
 
 	return true
 }
-func (this *Paramter) GetType() *Type {
+func (this *Paramter) GetType() Type {
 	return types[this.TypeName]
 }
 func (this *Paramter) GetValidator() *ValidatorType {
@@ -259,6 +260,7 @@ type ResponseTrigger struct {
 type Api struct {
 	Name        string
 	Url         string
+	Delay       []int64 //延迟毫秒
 	Description string
 	Methods     []HttpMethodType
 	RequestSet  Request  `yaml:"request"`
@@ -289,21 +291,33 @@ func (this *ResponseData) Render(writer io.Writer, p interface{}) {
 	this.t.Execute(writer, p)
 }
 
+type KeyLabel struct {
+	Key   string
+	Label string
+}
+type DictCatalog struct {
+	Code   string //名称
+	Values []KeyLabel
+}
+
 //系统配置
 type Config struct {
 	Port    []int
 	Version string
 	Types   []Type
+	Dict    []DictCatalog
 }
 
 func (this *Config) LoadFromYaml(filename string) {
 	loadfromYamlfile(filename, this)
 	//注册类型
 	for _, t := range this.Types {
-		types[t.Name] = &t
+		types[t.Name] = t
+		fmt.Println(t)
 		if t.Validator.Name == "regex" {
 			LoadPrepareExpex(t.Name, t.Option)
 		}
+
 	}
 }
 

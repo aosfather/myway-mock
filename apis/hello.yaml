@@ -4,6 +4,11 @@ description: hello world
 methods:
   - GET
   - POST
+delay:
+  - 100
+  - 150
+  - 230
+  - 400
 request:
   style: json
   error: |
