@@ -291,7 +291,7 @@ func (this *ResponseData) Render(writer io.Writer, p interface{}) {
 
 //系统配置
 type Config struct {
-	Port    int
+	Port    []int
 	Version string
 	Types   []Type
 }

@@ -17,7 +17,7 @@ func main() {
 
 type application struct {
 	config   *Config
-	server   *HttpServer
+	server   []*HttpServer
 	dispatch *DispatchManager
 }
 
@@ -51,13 +51,37 @@ func (this *application) loadApis(pathSeparator string, fileDir string) {
 	}
 }
 
+/**
+  启动应用
+  默认端口 80
+  持多个端口监听
+*/
 func (this *application) start() {
-	//启动服务
-	this.server = new(HttpServer)
-	this.server.dispatch = this.dispatch
-	this.server.port = this.config.Port
-	this.server.Start()
+	default_port := 80
+	if this.config.Port != nil && len(this.config.Port) > 0 {
+		default_port = this.config.Port[0]
+	}
+	//多个端口时候，对第一个以为的端口使用协程启动
+	if len(this.config.Port) > 1 {
+		//启动服务
+		for index, port := range this.config.Port {
+			if index == 0 {
+				continue
+			}
+			go this.runServer(port)
+		}
+		this.runServer(default_port)
+	}
 
+}
+
+//启动端口监听服务，提供http服务
+func (this *application) runServer(port int) {
+	server := new(HttpServer)
+	server.dispatch = this.dispatch
+	server.port = port
+	this.server = append(this.server, server)
+	server.Start()
 }
 
 func (this *application) shutdown() {
