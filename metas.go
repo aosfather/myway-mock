@@ -275,7 +275,7 @@ type ResponseData struct {
 	Description string             //描述
 	Style       StyleType          //格式
 	Data        string             //数据类容
-	t           *template.Template //模板
+	t           *template.Template `yaml:"-"` //模板
 }
 
 func (this *ResponseData) LoadFromYaml(filename string) {
