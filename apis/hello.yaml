@@ -1,20 +1,24 @@
-url: /hello
-desc: hello world
+name: hello
+url: /helloworld
+description: hello world
 methods:
   - GET
   - POST
-paramters:
+request:
   style: json
   error: |
     {"success":false,"errcode":"50001","errmessage":"参数错误!"}
   items:
-    - {paramter: name ,type: String ,length: 30,policy: Must,regexp: }
-    - {paramter: world ,type: String ,length: 30,policy: Option,regexp: }
-default: success
-matchs:
-  - data: success
-    match:
-      - {paramter: name ,value: mike }
-  - data: error
-    match:
-      - {paramter: name ,value: jone}
+    - {paramter: name ,type: String ,length: 30,policy: Must,validator: }
+    - {paramter: world ,type: String ,length: 30,policy: Option,validator: }
+response:
+  #默认返回结果编号
+  default: success
+  #触发条件，根据条件返回不同的数据
+  triggers:
+    - data: success
+      match:
+        - {paramter: name ,value: mike }
+    - data: error
+      match:
+        - {paramter: name ,value: jone}

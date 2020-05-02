@@ -4,5 +4,5 @@ port: 8080
 version: 1.0.0
 # 预定义的类型
 types:
-  - {name: String}
-  - {}
+  - {name: String,label: 字符串,length: ,option: ,validator: }
+  - {name: Date,label: 日期 ,length: 8,option: ,validator: regex}

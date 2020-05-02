@@ -1,13 +1,15 @@
+# api 的名称，data目录将使用该名称，建议文件名和此名称相同
+name: hello
 # api 地址
 url: /hello
 # api 功能描述
-desc: hello world
+description: hello world
 # api 支持的访问形式取值(GET、POST、PUT、DEL)
 methods:
   - GET
   - POST
-# 参数定义
-paramters:
+# 参数请求定义
+request:
   # 参数形式 取值 json、xml、url-form
   style: json
   # 参数校验错误的返回结果
@@ -15,16 +17,19 @@ paramters:
     {"success":false,"errcode":"50001","errmessage":"参数错误!"}
   # 参数定义列表，paramter 参数名称 type 参数类型 length 长度限制 policy 策略[取值 Must必填、Option可选 ] regexp 正则校验规则
   items:
-    - {paramter: name ,type: String ,length: 30,policy: Must,regexp: }
-    - {paramter: world ,type: String ,length: 30,policy: Option,regexp: }
-#默认返回结果编号
-default: success
+    - {paramter: name ,type: String ,length: 30,policy: Must,validator: regexp }
+    - {paramter: world ,type: String ,length: 30,policy: Option,validator: regexp }
+
 # 根据条件的匹配定义，data 返回的数据编号， match 匹配规则 paramter 参数名，value 取值
 # 一个匹配规则可以多个参数只有条件都满足才算匹配上。
-matchs:
-  - data: success
-    match:
-      - {paramter: name ,value: mike }
-  - data: error
-    match:
-      - {paramter: name ,value: jone}
+response:
+   #默认返回结果编号
+  default: success
+  #触发条件，根据条件返回不同的数据
+  triggers:
+    - data: success
+      match:
+        - {paramter: name ,value: mike }
+    - data: error
+      match:
+        - {paramter: name ,value: jone}
