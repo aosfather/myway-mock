@@ -8,31 +8,26 @@ import (
  校验实现
 
 */
-//校验器
-type Validator func(value string, option string) bool
-type RegexpValidator struct {
-	patterns map[string]*regexp.Regexp
-}
+
+// 正则校验器
+var patterns map[string]*regexp.Regexp = make(map[string]*regexp.Regexp)
 
 //加载正则表达式到缓存中
-func (this *RegexpValidator) Load(key string, p string) {
-	if this.patterns == nil {
-		this.patterns = make(map[string]*regexp.Regexp)
-	}
+func LoadPrepareExpex(key string, p string) {
 	if key != "" && p != "" {
 		pattern, err := regexp.Compile(p)
 		if err != nil {
 			//
 		} else {
-			this.patterns[key] = pattern
+			patterns[key] = pattern
 		}
 
 	}
 }
 
-//校验参数
-func (this *RegexpValidator) Validate(value string, option string) bool {
-	pattern := this.patterns[option]
+//正则表达式校验参数
+func RegexpValidate(value string, option string) bool {
+	pattern := patterns[option]
 	if pattern == nil {
 		pattern, _ = regexp.Compile(option)
 	}
@@ -43,3 +38,5 @@ func (this *RegexpValidator) Validate(value string, option string) bool {
 	return false
 
 }
+
+//-----------------------------

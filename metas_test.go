@@ -49,3 +49,25 @@ func TestApi_LoadFromYaml(t *testing.T) {
 	t.Log(api.RequestSet.Style)
 	t.Log(api)
 }
+
+func TestValidatorType_UnmarshalYAML(t *testing.T) {
+	var vt ValidatorType
+	yaml.Unmarshal([]byte(""), &vt)
+	t.Log(vt)
+	yaml.Unmarshal([]byte("regex"), &vt)
+	t.Log(vt)
+
+}
+
+func TestParamter_Validate(t *testing.T) {
+	var api Api
+	api.LoadFromYaml("apis/hello.yaml")
+	p := api.RequestSet.Fields[0]
+	c := new(Config)
+	c.LoadFromYaml("configs.yaml")
+
+	t.Log(p)
+	t.Log(p.Validate("123"))
+	t.Log(p.Validate("abc"))
+	t.Log(p.Validate("123456789"))
+}

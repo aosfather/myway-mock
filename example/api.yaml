@@ -15,10 +15,11 @@ request:
   # 参数校验错误的返回结果
   error: |
     {"success":false,"errcode":"50001","errmessage":"参数错误!"}
-  # 参数定义列表，paramter 参数名称 type 参数类型 length 长度限制 policy 策略[取值 Must必填、Option可选 ] regexp 正则校验规则
+  # 参数定义列表，paramter 参数名称 type 参数类型 length 长度限制 policy 策略[取值 Must必填、Option可选 ]
+  # validator 校验器，例如：regexp 正则校验规则；expr 对应校验的表达式
   items:
-    - {paramter: name ,type: String ,length: 30,policy: Must,validator: regexp }
-    - {paramter: world ,type: String ,length: 30,policy: Option,validator: regexp }
+    - {paramter: name ,type: String ,length: 30,policy: Must,validator: regexp ,expr:}
+    - {paramter: world ,type: String ,length: 30,policy: Option,validator: regexp,expr: }
 
 # 根据条件的匹配定义，data 返回的数据编号， match 匹配规则 paramter 参数名，value 取值
 # 一个匹配规则可以多个参数只有条件都满足才算匹配上。
