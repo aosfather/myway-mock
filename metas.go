@@ -215,7 +215,6 @@ type Paramter struct {
 }
 
 func (this *Paramter) Validate(v string) bool {
-	fmt.Println(this.TypeName)
 	t := types[this.TypeName]
 	if t.Name == "" {
 		return false
@@ -349,7 +348,7 @@ func (this *Config) LoadFromYaml(filename string) {
 	//注册类型
 	for _, t := range this.Types {
 		types[t.Name] = t
-		fmt.Println(t)
+		log.Println("load type:", t)
 		if t.Validator.Name == "regex" {
 			LoadPrepareExpex(t.Name, t.Option)
 		}
@@ -358,7 +357,7 @@ func (this *Config) LoadFromYaml(filename string) {
 	//注册字典
 	for _, d := range this.Dict {
 		dictionary[d.Code] = d
-		fmt.Println(d)
+		log.Println("load dictionary:", d)
 	}
 }
 

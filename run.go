@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 )
 
@@ -22,6 +22,7 @@ type application struct {
 }
 
 func (this *application) init() {
+	log.Println("myway-mock service begin start")
 	//加载配置文件
 	this.config = new(Config)
 	this.config.LoadFromYaml("configs.yaml")
@@ -38,13 +39,12 @@ func (this *application) loadApis(pathSeparator string, fileDir string) {
 	for _, onefile := range files {
 		filename := fileDir + pathSeparator + onefile.Name()
 		if onefile.IsDir() {
-			//fmt.Println(tmpPrefix, onefile.Name(), "目录:")
 			this.loadApis(pathSeparator, filename)
 		} else {
 			api := new(Api)
 			api.LoadFromYaml(filename)
-			fmt.Println(api)
 			if api.Url != "" {
+				log.Println("load the define of api:", api.Name)
 				this.dispatch.AddApi("", "datas", api)
 			}
 		}
@@ -57,6 +57,7 @@ func (this *application) loadApis(pathSeparator string, fileDir string) {
   持多个端口监听
 */
 func (this *application) start() {
+
 	default_port := 80
 	if this.config.Port != nil && len(this.config.Port) > 0 {
 		default_port = this.config.Port[0]
@@ -71,8 +72,10 @@ func (this *application) start() {
 			if index == 0 {
 				continue
 			}
+			log.Println("start server in port: ", port)
 			go this.runServer(port)
 		}
+		log.Println("start server in port: ", default_port)
 		this.runServer(default_port)
 	}
 

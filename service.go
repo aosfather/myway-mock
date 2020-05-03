@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"log"
 	"math/rand"
 	"time"
 )
@@ -48,7 +49,7 @@ func (this *Service) IsSupportMethod(m HttpMethodType) bool {
 func (this *Service) validateInput(writer io.Writer, input map[string]interface{}) (StyleType, error) {
 	for _, p := range this.meta.RequestSet.Fields {
 		if !this.validateField(p, input[p.Name]) {
-			fmt.Println("not validate", p.Name)
+			log.Printf("parameter '%s' not validated!", p.Name)
 			errMap := make(map[string]string)
 			errMap[ERR_PARAMETER] = p.Name
 			errMap[ERR_MSG] = fmt.Sprintf("%s 校验不通过", p.Name)
@@ -65,7 +66,6 @@ func (this *Service) outError(writer io.Writer, err map[string]string) StyleType
 		this.errTemplate = template.New(this.meta.Name + "_error")
 		this.errTemplate.Parse(this.meta.RequestSet.Error)
 	}
-	fmt.Println(err)
 	this.errTemplate.Execute(writer, err)
 	return this.meta.RequestSet.Style
 }
@@ -98,12 +98,13 @@ func (this *Service) Select(writer io.Writer, input map[string]interface{}) Styl
 	//根据设置的延时时间，随机选取设置的多个值中的一个进行延时处理
 	if this.meta.Delay != nil && len(this.meta.Delay) > 0 {
 		index := r.Intn(len(this.meta.Delay))
-		fmt.Println(index, "---", this.meta.Delay[index])
+		log.Println("mock service uesed time ", this.meta.Delay[index], " ms")
 		time.Sleep(time.Millisecond * time.Duration(this.meta.Delay[index]))
 	}
 
 	//根据触发器的条件进行匹配找的完全匹配的结果id
 	result := this.match(input)
+	log.Printf("match '%s' data", result)
 	return this.output(writer, result, input)
 }
 

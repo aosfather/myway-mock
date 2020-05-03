@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/valyala/fasthttp"
 	"io/ioutil"
+	"log"
 	"strings"
 )
 
@@ -34,6 +35,7 @@ func (this *HttpServer) Start() {
 func (this *HttpServer) ServeHTTP(ctx *fasthttp.RequestCtx) {
 	//获取访问的url
 	url := string(ctx.Request.URI().RequestURI())
+	log.Println("access the url:", url)
 	domain := string(ctx.Request.Header.Host())
 	//处理favicon.ico
 	if url == "/favicon.ico" {
@@ -47,6 +49,7 @@ func (this *HttpServer) ServeHTTP(ctx *fasthttp.RequestCtx) {
 			ctx.Response.Header.Set(CONTENT_TYPE, "text/html;charset=utf-8")
 			ctx.Response.SetBodyString("<b>the url not found!</b>")
 			ctx.Response.SetStatusCode(404)
+			log.Printf("the url %s not found\n", url)
 
 		} else {
 			//检查http method 看是否支持该类型
@@ -68,7 +71,7 @@ func (this *HttpServer) ServeHTTP(ctx *fasthttp.RequestCtx) {
 }
 
 const CONTENT_TYPE = "Content-Type"
-const SERVER_NAME = "nginx 1.3.0"
+const SERVER_NAME = "myway-mock"
 
 func (this *HttpServer) call(api *Service, ctx *fasthttp.RequestCtx) {
 	//校验参数
