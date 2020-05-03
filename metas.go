@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"strings"
 	"text/template"
 )
 
@@ -111,6 +112,17 @@ const (
 	UrlForm StyleType = 13
 )
 
+func (this StyleType) GetContentType() string {
+	switch this {
+	case Json:
+		return "application/json;charset=utf-8"
+	case Xml:
+		return "text/xml;charset=utf-8"
+	case UrlForm:
+		return "text/html;charset=utf-8"
+	}
+	return "text/html"
+}
 func (this *StyleType) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var text string
 	unmarshal(&text)
@@ -149,6 +161,20 @@ const (
 	Head HttpMethodType = 24
 )
 
+func ParseHttpMethodType(method string) HttpMethodType {
+	method = strings.ToUpper(method)
+	switch method {
+	case "GET":
+		return Get
+	case "POST":
+		return Post
+	case "PUT":
+		return Put
+	case "DELETE":
+		return Del
+	}
+	return Get
+}
 func (this *HttpMethodType) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var text string
 	unmarshal(&text)
@@ -254,6 +280,21 @@ type Response struct {
 type ResponseTrigger struct {
 	Data  string      //返回数据id
 	Match []MatchItem //匹配条件
+}
+
+func (this *ResponseTrigger) IsMatch(input map[string]interface{}) bool {
+	for _, m := range this.Match {
+		target := input[m.Name]
+		if target != nil {
+			if m.Value != fmt.Sprintf("%s", target) {
+				return false
+			}
+		} else {
+			return false
+		}
+
+	}
+	return true
 }
 
 //api 定义

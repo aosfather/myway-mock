@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"github.com/valyala/fasthttp"
 	"io/ioutil"
@@ -48,7 +50,7 @@ func (this *HttpServer) ServeHTTP(ctx *fasthttp.RequestCtx) {
 
 		} else {
 			//检查http method 看是否支持该类型
-			if api.IsSupportMethod(getMethod(ctx)) {
+			if api.IsSupportMethod(ParseHttpMethodType(string(ctx.Method()))) {
 				this.call(api, ctx)
 			} else {
 				//不支持的 http method 处理
@@ -71,20 +73,34 @@ const SERVER_NAME = "nginx 1.3.0"
 func (this *HttpServer) call(api *Service, ctx *fasthttp.RequestCtx) {
 	//校验参数
 	contentType := string(ctx.Request.Header.ContentType())
-	fmt.Println(contentType)
 	var input map[string]interface{} = make(map[string]interface{})
+	//不支持文件流
 	if ctx.Request.IsBodyStream() {
-		fmt.Println("body has content")
+		ctx.Response.SetBodyString("<b>not surpport stream!</b>")
+		ctx.Response.SetStatusCode(400)
+		return
 	}
+
+	//json格式请求处理
 	if strings.Contains(contentType, "application/json") {
+		body := ctx.Request.Body()
+		err := json.Unmarshal(body, &input)
+		if err != nil {
 
+		}
+		//xml格式请求处理
 	} else if strings.Contains(contentType, "text/xml") {
+		body := ctx.Request.Body()
+		err := xml.Unmarshal(body, &input)
+		if err != nil {
 
+		}
+		//form方式
 	} else if strings.Contains(contentType, "application/x-www-form-urlencoded") {
 		ctx.Request.PostArgs().VisitAll(func(key, value []byte) {
 			input[string(key)] = string(value)
 		})
-
+		//普通查询
 	} else {
 		args := ctx.QueryArgs()
 		if args != nil {
@@ -94,36 +110,6 @@ func (this *HttpServer) call(api *Service, ctx *fasthttp.RequestCtx) {
 		}
 	}
 
-	var st StyleType
-	//校验参数
-	st, err := api.ValidateInput(ctx.Response.BodyWriter(), input)
-	if err == nil {
-		//返回结果
-		st = api.Select(ctx.Response.BodyWriter(), input)
-	}
-
-	switch st {
-	case Json:
-		ctx.Response.Header.Set(CONTENT_TYPE, "application/json; charset=utf-8")
-	case Xml:
-		ctx.Response.Header.Set(CONTENT_TYPE, "text/xml;charset=utf-8")
-	default:
-		ctx.Response.Header.Set(CONTENT_TYPE, "text/html;charset=utf-8")
-	}
-}
-
-func getMethod(ctx *fasthttp.RequestCtx) HttpMethodType {
-	method := string(ctx.Method())
-	fmt.Println(method)
-	switch method {
-	case "GET":
-		return Get
-	case "POST":
-		return Post
-	case "PUT":
-		return Put
-	case "DELETE":
-		return Del
-	}
-	return Get
+	st := api.Select(ctx.Response.BodyWriter(), input)
+	ctx.Response.Header.Set(CONTENT_TYPE, st.GetContentType())
 }

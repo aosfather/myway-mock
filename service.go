@@ -43,7 +43,7 @@ func (this *Service) IsSupportMethod(m HttpMethodType) bool {
 }
 
 //校验输入
-func (this *Service) ValidateInput(writer io.Writer, input map[string]interface{}) (StyleType, error) {
+func (this *Service) validateInput(writer io.Writer, input map[string]interface{}) (StyleType, error) {
 	for _, p := range this.meta.RequestSet.Fields {
 		if !this.validateField(p, input[p.Name]) {
 			fmt.Println("not validate", p.Name)
@@ -90,11 +90,27 @@ func (this *Service) Select(writer io.Writer, input map[string]interface{}) Styl
 		fmt.Println(index, "---", this.meta.Delay[index])
 		time.Sleep(time.Millisecond * time.Duration(this.meta.Delay[index]))
 	}
+	//校验参数
+	st, err := this.validateInput(writer, input)
+	if err != nil {
+		//返回结果
+		return st
+	}
 
-	result := this.meta.ResponseSet.Default
 	//根据触发器的条件进行匹配找的完全匹配的结果id
-
+	result := this.match(input)
 	return this.output(writer, result, input)
+}
+
+//检查匹配的条件，获取到与输入的条件最匹配的结果集编号
+func (this *Service) match(input map[string]interface{}) string {
+	for _, trigger := range this.meta.ResponseSet.Triggers {
+		if trigger.IsMatch(input) {
+			return trigger.Data
+		}
+	}
+
+	return this.meta.ResponseSet.Default
 }
 
 //输出数据
