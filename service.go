@@ -78,7 +78,7 @@ func (this *Service) validateField(p Paramter, v interface{}) bool {
 		}
 		return true
 	}
-	value := fmt.Sprintf("%s", v)
+	value := fmt.Sprintf("%v", v)
 	return p.Validate(value)
 }
 

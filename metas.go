@@ -17,15 +17,9 @@ import (
 //校验器类型列表
 var validators map[string]*ValidatorType = make(map[string]*ValidatorType)
 var types map[string]Type = make(map[string]Type)
+var dictionary map[string]DictCatalog = make(map[string]DictCatalog)
 
-//注册校验器
-func init() {
-	fmt.Println("init validators")
-	//初始化
-	validators["regex"] = &ValidatorType{"regex", RegexpValidate}
-}
-
-type Validate func(value string, option string) bool
+type Validate func(value string, name string, option string) bool
 
 //校验器类型
 type ValidatorType struct {
@@ -67,7 +61,7 @@ func (this *Type) validate(v string) bool {
 	}
 	//校验器校验
 	if this.Validator.Name != "" {
-		return this.Validator.validate(v, this.Name)
+		return this.Validator.validate(v, this.Name, this.Option)
 	}
 	return true
 }
@@ -242,7 +236,7 @@ func (this *Paramter) Validate(v string) bool {
 	if this.ValidatorName != "" {
 		vt := validators[this.ValidatorName]
 		if vt != nil {
-			return vt.validate(v, this.Expr)
+			return vt.validate(v, "", this.Expr)
 		}
 		return false
 	}
@@ -286,7 +280,7 @@ func (this *ResponseTrigger) IsMatch(input map[string]interface{}) bool {
 	for _, m := range this.Match {
 		target := input[m.Name]
 		if target != nil {
-			if m.Value != fmt.Sprintf("%s", target) {
+			if m.Value != fmt.Sprintf("%v", target) {
 				return false
 			}
 		} else {
@@ -359,6 +353,11 @@ func (this *Config) LoadFromYaml(filename string) {
 			LoadPrepareExpex(t.Name, t.Option)
 		}
 
+	}
+	//注册字典
+	for _, d := range this.Dict {
+		dictionary[d.Code] = d
+		fmt.Println(d)
 	}
 }
 

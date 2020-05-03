@@ -15,7 +15,7 @@ request:
     {"success":false,"errcode":"50001","errmessage":"参数{{ ._Parameter}},校验错误 {{._Msg}}"}
   items:
     - {paramter: name ,type: String ,length: 30,policy: Must,validator: }
-    - {paramter: world ,type: String ,length: 30,policy: Option,validator: }
+    - {paramter: world ,type: Sex ,length: 30,policy: Option,validator: }
 response:
   #默认返回结果编号
   default: success
