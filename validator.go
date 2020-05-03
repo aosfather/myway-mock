@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"regexp"
 )
 
@@ -34,7 +33,6 @@ func LoadPrepareExpex(key string, p string) {
 
 //字典校验
 func DictValidate(value string, name string, dict string) bool {
-	fmt.Println(dictionary)
 	catalog := dictionary[dict]
 	//轮询code看是否属于取值范围内的值
 	if catalog.Code != "" {
