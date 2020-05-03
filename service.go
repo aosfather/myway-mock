@@ -16,6 +16,8 @@ const (
 	ERR_MSG       = "_Msg"
 )
 
+var maxRandomDelay = 100
+
 //随机种子
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 
@@ -84,17 +86,20 @@ func (this *Service) validateField(p Paramter, v interface{}) bool {
 
 //根据参数选择对应的数据结果集
 func (this *Service) Select(writer io.Writer, input map[string]interface{}) StyleType {
-	//根据设置的延时时间，随机选取设置的多个值中的一个进行延时处理
-	if this.meta.Delay != nil && len(this.meta.Delay) > 0 {
-		index := r.Intn(len(this.meta.Delay))
-		fmt.Println(index, "---", this.meta.Delay[index])
-		time.Sleep(time.Millisecond * time.Duration(this.meta.Delay[index]))
-	}
+	//随机延时100毫秒
+	time.Sleep(time.Millisecond * time.Duration(r.Intn(maxRandomDelay)))
 	//校验参数
 	st, err := this.validateInput(writer, input)
 	if err != nil {
 		//返回结果
 		return st
+	}
+
+	//根据设置的延时时间，随机选取设置的多个值中的一个进行延时处理
+	if this.meta.Delay != nil && len(this.meta.Delay) > 0 {
+		index := r.Intn(len(this.meta.Delay))
+		fmt.Println(index, "---", this.meta.Delay[index])
+		time.Sleep(time.Millisecond * time.Duration(this.meta.Delay[index]))
 	}
 
 	//根据触发器的条件进行匹配找的完全匹配的结果id

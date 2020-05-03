@@ -337,10 +337,11 @@ type DictCatalog struct {
 
 //系统配置
 type Config struct {
-	Port    []int
-	Version string
-	Types   []Type
-	Dict    []DictCatalog
+	Port     []int
+	Version  string
+	Maxdelay int
+	Types    []Type
+	Dict     []DictCatalog
 }
 
 func (this *Config) LoadFromYaml(filename string) {

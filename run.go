@@ -61,6 +61,9 @@ func (this *application) start() {
 	if this.config.Port != nil && len(this.config.Port) > 0 {
 		default_port = this.config.Port[0]
 	}
+	if this.config.Maxdelay != 0 {
+		maxRandomDelay = this.config.Maxdelay
+	}
 	//多个端口时候，对第一个以为的端口使用协程启动
 	if len(this.config.Port) > 1 {
 		//启动服务

@@ -4,6 +4,8 @@ port:
   - 9090
 # 版本号
 version: 1.0.0
+# 随机最大的网络延时，用于模拟通讯延时。单位 毫秒
+maxdelay: 10
 # 预定义的类型
 types:
   - {name: String,label: 字符串,length: ,option: ,validator: }
