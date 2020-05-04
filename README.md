@@ -1,6 +1,8 @@
 # myway-mock
 # 吾道-模拟API服务
-”吾道“之模拟服务，该应用能实现模拟基于http协议的web服务，可用于模拟外部接口和内部未实现的接口服务。适用于前后端分离以及服务依赖之间的解耦。
+”吾道“之模拟服务，该应用能实现模拟基于http协议的web服务，可用于模拟外部接口和内部未实现的接口服务。适用于前后端分离以及服务依赖之间的解耦。  
+###帮助文档
+[quickstart 快速开始](/doc/quickstart.md)
 ## version 1.0.0
  基于“吾道”(myway)的技术，实现对api服务的模拟。  
  “吾道” 三件套之一，三件套包括：myway-gateway，myway-mock、myway-datamanager。

@@ -30,7 +30,7 @@
 
 ### 第一个模拟API
 新建myfirst.yaml文件，并放在apis目录下。  
-格式如下：
+文件内容如下：
 ```yaml
 name: myfirst  
 url: /first 
@@ -67,7 +67,7 @@ response:
 ```
 第二步，完成data数据文件编写，同样是yaml格式。在前面我们定义了两个数据success和error。  
 我们在datas目录下新见first这个目录，并在first目录下新增 success.yaml文件和error.yaml文件。
-格式如下：  
+文件内容如下：  
 sucess.yaml    
 ```yaml
 # 数据编号，在接口内唯一就可以
