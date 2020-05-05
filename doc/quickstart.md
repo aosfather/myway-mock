@@ -17,7 +17,8 @@
 
 ### 下载安装
 #### 下载地址
-
+最新版本请在https://github.com/aosfather/myway-mock/releases
+下载
 #### 安装方法
 将对应的压缩包解压到想安装的地方。
 * windows 直接启动即可
