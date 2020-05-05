@@ -147,12 +147,3 @@ delay:
 * Int 整型，整数类型
 * Numric 数字型字符串，字符中只允许出现数字
 * Bool 布尔类型
-  - {name: String,label: 字符串,length: ,option: ,validator: }
-  - {name: Date,label: 日期 ,length: 10,option: "[1-9]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])" ,validator: regex}
-  - {name: Time,label: 时间 ,length: 8,option: "(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d" ,validator: regex}
-  - {name: DateTime,label: 日期时间 ,length: 19,option: "[1-9]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d" ,validator: regex}
-  - {name: Dict,label: 字典类型,length: ,option: ,validator: dict }
-  - {name: Numric,label: 数字字符串,length: ,option: "[0-9]\\d*" ,validator: regex }
-  - {name: Sex,label: 字典类型,length: ,option: sex ,validator: dict }
-  - {name: Int,label: 整型 ,length: 10, option: "[-]?[0-9]\\d+", validator: regex}
-  - {name: Bool,label: 布尔类型,length:5 ,option: bool ,validator: dict }
