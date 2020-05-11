@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/aosfather/bingo_mvc"
+	fsd "github.com/aosfather/bingo_mvc/fasthttp"
 	"io/ioutil"
 	"log"
 	"os"
@@ -17,8 +19,8 @@ func main() {
 
 type application struct {
 	config   *Config
-	server   []*HttpServer
-	dispatch *DispatchManager
+	server   []*fsd.FastHTTPDispatcher
+	dispatch *bingo_mvc.DispatchManager
 }
 
 func (this *application) init() {
@@ -27,7 +29,7 @@ func (this *application) init() {
 	this.config = new(Config)
 	this.config.LoadFromYaml("configs.yaml")
 	//初始化api
-	this.dispatch = new(DispatchManager)
+	this.dispatch = new(bingo_mvc.DispatchManager)
 	this.dispatch.Init()
 	//加载apis目录下的api定义
 	this.loadApis(string(os.PathSeparator), "apis")
@@ -45,7 +47,9 @@ func (this *application) loadApis(pathSeparator string, fileDir string) {
 			api.LoadFromYaml(filename)
 			if api.Url != "" {
 				log.Println("load the define of api:", api.Name)
-				this.dispatch.AddApi("", "datas", api)
+				serv := NewService("datas", api)
+				log.Println(api.Url)
+				this.dispatch.AddApi("", api.Name, api.Url, serv)
 			}
 		}
 	}
@@ -83,11 +87,12 @@ func (this *application) start() {
 
 //启动端口监听服务，提供http服务
 func (this *application) runServer(port int) {
-	server := new(HttpServer)
-	server.dispatch = this.dispatch
-	server.port = port
+	server := new(fsd.FastHTTPDispatcher)
+	server.Port = port
+	server.SetDispatchManager(this.dispatch)
+	//server.port = port
 	this.server = append(this.server, server)
-	server.Start()
+	server.Run()
 }
 
 func (this *application) shutdown() {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	mvc "github.com/aosfather/bingo_mvc"
 	"html/template"
 	"io"
 	"log"
@@ -36,7 +37,7 @@ func (this *Service) ClearCache() {
 	}
 }
 
-func (this *Service) IsSupportMethod(m HttpMethodType) bool {
+func (this *Service) IsSupportMethod(m mvc.HttpMethodType) bool {
 	for _, sm := range this.meta.Methods {
 		if sm == m {
 			return true
@@ -46,7 +47,7 @@ func (this *Service) IsSupportMethod(m HttpMethodType) bool {
 }
 
 //校验输入
-func (this *Service) validateInput(writer io.Writer, input map[string]interface{}) (StyleType, error) {
+func (this *Service) validateInput(writer io.Writer, input map[string]interface{}) (mvc.StyleType, error) {
 	for _, p := range this.meta.RequestSet.Fields {
 		if !this.validateField(p, input[p.Name]) {
 			log.Printf("parameter '%s' not validated!", p.Name)
@@ -61,7 +62,7 @@ func (this *Service) validateInput(writer io.Writer, input map[string]interface{
 	return this.meta.RequestSet.Style, nil
 }
 
-func (this *Service) outError(writer io.Writer, err map[string]string) StyleType {
+func (this *Service) outError(writer io.Writer, err map[string]string) mvc.StyleType {
 	if this.errTemplate == nil {
 		this.errTemplate = template.New(this.meta.Name + "_error")
 		this.errTemplate.Parse(this.meta.RequestSet.Error)
@@ -85,7 +86,9 @@ func (this *Service) validateField(p Paramter, v interface{}) bool {
 }
 
 //根据参数选择对应的数据结果集
-func (this *Service) Select(writer io.Writer, input map[string]interface{}) StyleType {
+func (this *Service) Select(writer io.Writer, inputfunc func(interface{}) error) mvc.StyleType {
+	var input map[string]interface{} = make(map[string]interface{})
+	inputfunc(input)
 	//随机延时100毫秒
 	time.Sleep(time.Millisecond * time.Duration(r.Intn(maxRandomDelay)))
 	//校验参数
@@ -120,7 +123,7 @@ func (this *Service) match(input map[string]interface{}) string {
 }
 
 //输出数据
-func (this *Service) output(writer io.Writer, id string, input interface{}) StyleType {
+func (this *Service) output(writer io.Writer, id string, input interface{}) mvc.StyleType {
 	data := this.dataMap[id]
 	if data == nil {
 		filename := this.dataPath + "/" + id + ".yaml"

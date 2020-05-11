@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	mvc "github.com/aosfather/bingo_mvc"
 	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
 	"log"
-	"strings"
 	"text/template"
 )
 
@@ -98,111 +98,111 @@ func (this PolicyType) MarshalYAML() (interface{}, error) {
 }
 
 //数据格式类型
-type StyleType byte
-
-const (
-	Json    StyleType = 11
-	Xml     StyleType = 12
-	UrlForm StyleType = 13
-)
-
-func (this StyleType) GetContentType() string {
-	switch this {
-	case Json:
-		return "application/json;charset=utf-8"
-	case Xml:
-		return "text/xml;charset=utf-8"
-	case UrlForm:
-		return "text/html;charset=utf-8"
-	}
-	return "text/html"
-}
-func (this *StyleType) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	var text string
-	unmarshal(&text)
-	if text == "json" {
-		*this = Json
-	} else if text == "xml" {
-		*this = Xml
-	} else if text == "url-form" {
-		*this = UrlForm
-	} else {
-		*this = 0
-		return fmt.Errorf("value is wrong! [ %s ]", text)
-	}
-	return nil
-}
-
-func (this StyleType) MarshalYAML() (interface{}, error) {
-	if this == Json {
-		return "json", nil
-	} else if this == Xml {
-		return "xml", nil
-	} else if this == UrlForm {
-		return "url-form", nil
-	}
-	return nil, fmt.Errorf("not surport %v", this)
-}
+//type StyleType byte
+//
+//const (
+//	Json    StyleType = 11
+//	Xml     StyleType = 12
+//	UrlForm StyleType = 13
+//)
+//
+//func (this StyleType) GetContentType() string {
+//	switch this {
+//	case Json:
+//		return "application/json;charset=utf-8"
+//	case Xml:
+//		return "text/xml;charset=utf-8"
+//	case UrlForm:
+//		return "text/html;charset=utf-8"
+//	}
+//	return "text/html"
+//}
+//func (this *StyleType) UnmarshalYAML(unmarshal func(interface{}) error) error {
+//	var text string
+//	unmarshal(&text)
+//	if text == "json" {
+//		*this = Json
+//	} else if text == "xml" {
+//		*this = Xml
+//	} else if text == "url-form" {
+//		*this = UrlForm
+//	} else {
+//		*this = 0
+//		return fmt.Errorf("value is wrong! [ %s ]", text)
+//	}
+//	return nil
+//}
+//
+//func (this StyleType) MarshalYAML() (interface{}, error) {
+//	if this == Json {
+//		return "json", nil
+//	} else if this == Xml {
+//		return "xml", nil
+//	} else if this == UrlForm {
+//		return "url-form", nil
+//	}
+//	return nil, fmt.Errorf("not surport %v", this)
+//}
 
 //http 访问方法类型
-type HttpMethodType byte
-
-const (
-	Get  HttpMethodType = 20
-	Post HttpMethodType = 21
-	Put  HttpMethodType = 22
-	Del  HttpMethodType = 23
-	Head HttpMethodType = 24
-)
-
-func ParseHttpMethodType(method string) HttpMethodType {
-	method = strings.ToUpper(method)
-	switch method {
-	case "GET":
-		return Get
-	case "POST":
-		return Post
-	case "PUT":
-		return Put
-	case "DELETE":
-		return Del
-	}
-	return Get
-}
-func (this *HttpMethodType) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	var text string
-	unmarshal(&text)
-	if text == "GET" {
-		*this = Get
-	} else if text == "POST" {
-		*this = Post
-	} else if text == "PUT" {
-		*this = Put
-	} else if text == "DEL" {
-		*this = Del
-	} else if text == "HEAD" {
-		*this = Head
-	} else {
-		*this = 0
-		return fmt.Errorf("value is wrong! [ %s ]", text)
-	}
-	return nil
-}
-
-func (this HttpMethodType) MarshalYAML() (interface{}, error) {
-	if this == Get {
-		return "GET", nil
-	} else if this == Post {
-		return "POST", nil
-	} else if this == Put {
-		return "PUT", nil
-	} else if this == Del {
-		return "DEL", nil
-	} else if this == Head {
-		return "HEAD", nil
-	}
-	return nil, fmt.Errorf("not surport %v", this)
-}
+//type HttpMethodType byte
+//
+//const (
+//	Get  HttpMethodType = 20
+//	Post HttpMethodType = 21
+//	Put  HttpMethodType = 22
+//	Del  HttpMethodType = 23
+//	Head HttpMethodType = 24
+//)
+//
+//func ParseHttpMethodType(method string) HttpMethodType {
+//	method = strings.ToUpper(method)
+//	switch method {
+//	case "GET":
+//		return Get
+//	case "POST":
+//		return Post
+//	case "PUT":
+//		return Put
+//	case "DELETE":
+//		return Del
+//	}
+//	return Get
+//}
+//func (this *HttpMethodType) UnmarshalYAML(unmarshal func(interface{}) error) error {
+//	var text string
+//	unmarshal(&text)
+//	if text == "GET" {
+//		*this = Get
+//	} else if text == "POST" {
+//		*this = Post
+//	} else if text == "PUT" {
+//		*this = Put
+//	} else if text == "DEL" {
+//		*this = Del
+//	} else if text == "HEAD" {
+//		*this = Head
+//	} else {
+//		*this = 0
+//		return fmt.Errorf("value is wrong! [ %s ]", text)
+//	}
+//	return nil
+//}
+//
+//func (this HttpMethodType) MarshalYAML() (interface{}, error) {
+//	if this == Get {
+//		return "GET", nil
+//	} else if this == Post {
+//		return "POST", nil
+//	} else if this == Put {
+//		return "PUT", nil
+//	} else if this == Del {
+//		return "DEL", nil
+//	} else if this == Head {
+//		return "HEAD", nil
+//	}
+//	return nil, fmt.Errorf("not surport %v", this)
+//}
 
 //参数
 type Paramter struct {
@@ -259,7 +259,7 @@ type MatchItem struct {
 }
 
 type Request struct {
-	Style  StyleType
+	Style  mvc.StyleType
 	Error  string
 	Fields []Paramter `yaml:"items"`
 }
@@ -296,7 +296,7 @@ type Api struct {
 	Url         string
 	Delay       []int64 //延迟毫秒
 	Description string
-	Methods     []HttpMethodType
+	Methods     []mvc.HttpMethodType
 	RequestSet  Request  `yaml:"request"`
 	ResponseSet Response `yaml:"response"`
 }
@@ -309,7 +309,7 @@ func (this *Api) LoadFromYaml(filename string) {
 type ResponseData struct {
 	Code        string             //编号
 	Description string             //描述
-	Style       StyleType          //格式
+	Style       mvc.StyleType      //格式
 	Data        string             //数据类容
 	t           *template.Template `yaml:"-"` //模板
 }
