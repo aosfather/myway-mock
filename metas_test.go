@@ -26,22 +26,6 @@ func TestPolicyType_UnmarshalYAML(t *testing.T) {
 
 }
 
-func TestStyleType_MarshalYAML(t *testing.T) {
-	t.Log(Json.MarshalYAML())
-	t.Log(Xml.MarshalYAML())
-	t.Log(UrlForm.MarshalYAML())
-}
-
-func TestStyleType_UnmarshalYAML(t *testing.T) {
-	var s StyleType
-	yaml.Unmarshal([]byte("Json"), &s)
-	t.Log(s)
-	yaml.Unmarshal([]byte("Xml"), &s)
-	t.Log(s)
-	yaml.Unmarshal([]byte("UrlForm"), &s)
-	t.Log(s)
-}
-
 func TestApi_LoadFromYaml(t *testing.T) {
 	var api Api
 	api.LoadFromYaml("apis/hello.yaml")
